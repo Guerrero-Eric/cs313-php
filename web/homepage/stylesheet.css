@@ -1,0 +1,31 @@
+body, html {
+    height: 100%;
+  }
+  .bg {
+    /* The image used */
+    background-image: url("image/will_rogers_beach.jpg");
+  
+    /* Half height */
+    height: 50%;
+  
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+.container{
+    padding: 80px 120px;
+}
+
+.profile {
+    border: 10px solid transparent;
+    margin-bottom: 25px;
+    width: 80%;
+    height: 80%;
+    opacity: 0.8;
+}
+
+.profile:hover {
+    border-color: #f1f1f1;
+}
