@@ -1,13 +1,27 @@
 <?php
-$dbServername = "localhost";
-$dbUsername = "root";
-$dbPassword = "";
-$dbName = "social_network_app";
 
-$link = mysqli_connect($dbServername, $dbUsername, $dbPassword, $dbName);
+$dbUrl = getenv('DATABASE_URL');
 
-// Check connection
-if ($link === false) {
-    die("ERROR: Could not connect to database. " . mysqli_connect_error());
-}
+			$dbopts = parse_url($dbUrl);
+
+			$dbHost = $dbopts["host"];
+			$dbPort = $dbopts["port"];
+			$dbUser = $dbopts["user"];
+			$dbPassword = $dbopts["pass"];
+			$dbName = ltrim($dbopts["path"],'/');
+
+			
+			try {
+
+					$link = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPassword);
+
+			}
+
+			catch (PDOException $ex) {
+
+					echo 'Error!: ' . $ex->getMessage();
+					die();
+
+			}
+
 ?>
