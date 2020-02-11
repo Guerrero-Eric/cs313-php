@@ -1,29 +1,33 @@
 <?php
-// Include db file
-require_once "db.php";
 // Initialize the session
 session_start();
 
-// Check if the user is logged in, if not then redirect him to login page
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-  header("location: ../login.php");
-  exit;
+if (!isset($_SESSION["username"])) {
+
+	header("Location: ../../login.php"); /* Redirect browser */
+
+	exit();
+
 }
 
-$username = htmlspecialchars($_SESSION["username"]);
+require_once('db.php');
 
-$sql = "SELECT * FROM members WHERE username = '$username'";
-$result = mysqli_query($link, $sql);
-$resltCheck =  mysqli_num_rows($result);
 
-if ($resltCheck > 0) {
-  while ($row = mysqli_fetch_assoc($result)) {
+$username = $_SESSION["username"];
+
+
+$stmt = $link->prepare("SELECT * FROM members Where username ='$username'");
+
+$stmt->bindValue("id",$id, PDO::PARAM_INT);
+$stmt->execute();
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $id = $row['id'];
     $fname = $row['fname'];
     $lname = $row['lname'];
     $email = $row['email'];
   }
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +52,7 @@ if ($resltCheck > 0) {
 
 
   <div class="container page-header">
-    <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to our site.</h1>
+    <h1>Hi, <b><?php echo $username ?></b>. Welcome to our site.</h1>
   </div>
   <div class="container">
     <div class="jumbotron">
@@ -58,7 +62,7 @@ if ($resltCheck > 0) {
         </div>
         <div class="col-md-8 col-xs-12 col-sm-6 col-lg-8">
           <div class="container" style="border-bottom:1px solid black">
-            <h2><?php echo htmlspecialchars($_SESSION["username"]); ?></h2>
+            <h2><?php echo $username ?></h2>
           </div>
           <hr>
           <ul class="container details">
@@ -86,7 +90,6 @@ if ($resltCheck > 0) {
 
 
 
-    <?php mysqli_close($link); ?>
     ?>
 </body>
 

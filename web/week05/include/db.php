@@ -2,7 +2,11 @@
 
 $dbUrl = getenv('DATABASE_URL');
 
+			
+
 			$dbopts = parse_url($dbUrl);
+
+			
 
 			$dbHost = $dbopts["host"];
 			$dbPort = $dbopts["port"];
@@ -11,6 +15,7 @@ $dbUrl = getenv('DATABASE_URL');
 			$dbName = ltrim($dbopts["path"],'/');
 
 			
+
 			try {
 
 					$link = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPassword);
@@ -20,8 +25,24 @@ $dbUrl = getenv('DATABASE_URL');
 			catch (PDOException $ex) {
 
 					echo 'Error!: ' . $ex->getMessage();
+
 					die();
 
 			}
+
+
+            $stmt = $db->prepare('SELECT * FROM members');
+
+			$stmt->execute();
+
+			
+
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+				echo '<p><strong>'.$row['username'].'</strong>'.' - '.$row['email'].'</p>';
+
+
+
+
 
 ?>
