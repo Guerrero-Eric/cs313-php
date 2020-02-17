@@ -1,5 +1,7 @@
 <?php
 require "register_form.php";
+session_start();
+
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +20,7 @@ require "register_form.php";
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <style type="text/css" href="style.css">
+    <style>
         body {
             font: 14px sans-serif;
             background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
@@ -40,48 +42,48 @@ require "register_form.php";
                 </div>
                 <div class="card-body">
                     <p>Please fill this form to create an account.</p>
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                        <div class="form-group <?php echo (!empty($fname_err)) ? 'has-error' : ''; ?>">
+                    <form action="register_form.php" method="POST" onsubmit="return signupvalidation()">
+                        <div class="form-group">
                             <label>First Name</label>
-                            <input type="text" name="fname" class="form-control" value="<?php echo $fname; ?>">
-                            <span class="help-block"><?php echo $fname_err; ?></span>
+                            <input type="text" id="fname" name="fname" class="form-control">
+                            <span class="help-block" id="fname_error"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($lname_err)) ? 'has-error' : ''; ?>">
+                        <div class="form-group">
                             <label>Last Name</label>
-                            <input type="text" name="lname" class="form-control" value="<?php echo $lname; ?>">
-                            <span class="help-block"><?php echo $lname_err; ?></span>
+                            <input type="text" id="lname" name="lname" class="form-control">
+                            <span class="help-block" id="lname_error"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+                        <div class="form-group">
                             <label>Username</label>
-                            <input type="text" name="username" class="form-control" value="<?php echo $username; ?>">
-                            <span class="help-block"><?php echo $username_err; ?></span>
+                            <input type="text" id="username" name="username" class="form-control">
+                            <span class="help-block" id="username_error"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
+                        <div class="form-group">
                             <label>Password</label>
-                            <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
-                            <span class="help-block"><?php echo $password_err; ?></span>
+                            <input type="password" id="password" name="password" class="form-control">
+                            <span class="help-block" id="password_error"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
+                        <div class="form-group">
                             <label>Confirm Password</label>
-                            <input type="password" name="confirm_password" class="form-control" value="<?php echo $confirm_password; ?>">
-                            <span class="help-block"><?php echo $confirm_password_err; ?></span>
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control">
+                            <span class="help-block" id="confirm_password_error"></span>
                         </div>
-                        <div class="form-group <?php echo (!empty($email_err)) ? 'has-error' : ''; ?>">
+                        <div class="form-group">
                             <label>Email</label>
-                            <input type="text" name="email" class="form-control" value="<?php echo $email; ?>">
-                            <span class="help-block"><?php echo $email_err; ?></span>
+                            <input type="text" id="email" name="email" class="form-control">
+                            <span class="help-block" id="email_error"></span>
                         </div>
                         <div class="form-group">
                             <input type="submit" class="btn btn-primary" value="Submit">
                             <input type="reset" class="btn btn-default" value="Reset">
                         </div>
-                        <p>Already have an account? <a href="../login.php">Login here</a>.</p>
+                        <p>Already have an account? <a href="../../login.php">Login here</a>.</p>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
+    <script src="signup_validation.js"></script>
 </body>
 
 </html>
