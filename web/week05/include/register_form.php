@@ -3,6 +3,7 @@
 require_once "db.php";
  
 // Define variables and initialize with empty values
+$param_username = htmlspecialchars($_POST["username"]);
 $username = $password = $confirm_password = $fname = $lname = $email = "";
 $username_err = $password_err = $confirm_password_err = $fname_err = $lname_err = $email_err = "";
 // Set parameters
@@ -16,13 +17,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else{
         
         // Prepare a select statement
-        $sql = "SELECT id FROM members WHERE username = ?";
+        $sql = "SELECT id FROM members WHERE username = :username";
       
         
         if( $stmt = $link->prepare($sql) ) {
             // Bind variables to the prepared statement as parameters
-            $stmt->bindValue('s', $param_username, PDO::PARAM_STR);
-            
+            $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+
              // Set parameters
              $param_username = trim($_POST["username"]);
             
@@ -92,14 +93,17 @@ if(empty(trim($_POST["email"]))){
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err && empty($fname_err) && empty($lname_err) && empty($email_err))){
         
-        // Prepare an insert statement
         $sql = "INSERT INTO members (username, password, fname, lname, email) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $link->prepare($sql);
+        
 
-        if($stmt) {
+        if($stmt = $link->prepare($sql)) {
             // Bind variables to the prepared statement as parameters
-            $stmt->bindValue('sssss', $param_username, $param_password, $param_fname, $param_lname, $param_email, PDO::PARAM_STR);
-            
+            $stmt->bindValue(":param_username", $param_username,PDO::PARAM_STR);   
+            $stmt->bindValue(":param_password",$param_password,PDO::PARAM_STR);
+            $stmt->bindValue(":param_fname",$param_fname,PDO::PARAM_STR);
+            $stmt->bindValue(":param_lname",$param_lname,PDO::PARAM_STR);
+            $stmt->bindValue(":param_email",$param_email, PDO::PARAM_STR);
+                
             // Set parameters
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
