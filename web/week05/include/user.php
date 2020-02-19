@@ -1,7 +1,5 @@
 <?php
-// Initialize the session
 session_start();
-
 if (!isset($_SESSION["username"])) {
 
 	header("Location: ../../login.php"); /* Redirect browser */
@@ -10,15 +8,13 @@ if (!isset($_SESSION["username"])) {
 
 }
 
-require_once('db.php');
+require("db.php");
+$db = get_db();
 
 
-$username = $_SESSION["username"];
+$username = htmlspecialchars($_SESSION["username"]);
 
-
-$stmt = $link->prepare("SELECT * FROM members Where username ='$username'");
-
-$stmt->bindValue("id",$id, PDO::PARAM_INT);
+$stmt = $db->prepare("SELECT * FROM members Where username ='$username'");
 $stmt->execute();
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

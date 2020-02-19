@@ -1,9 +1,6 @@
 <?php
-require "register_form.php";
 session_start();
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

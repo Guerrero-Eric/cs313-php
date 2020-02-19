@@ -1,65 +1,72 @@
 <?php
 
-// connect to the database
-
-require_once('db.php');
+session_start();
 
 
 
-// recieve the username and password
-
-$username = htmlspecialchars($_POST["username"]);
-
-$password = htmlspecialchars($_POST["password"]);
+$badLogin = false;
 
 
 
-// authenticate user credentials
+if (isset($_POST['username']) && isset($_POST['password'])) {
 
-$statement = $link->prepare("SELECT id, username, password FROM members
 
-                           WHERE username = :username");
+  $username = $_POST['username'];
 
-$statement->bindValue(":username", $username, PDO::PARAM_STR);
-
-$statement->execute();
+  $password = $_POST['password'];
 
 
 
-// get the password
+  // Connect to the DB
 
-$row = $statement->fetch(PDO::FETCH_ASSOC);
+  require("db.php");
 
-$passwordHashed = $row['password'];
-
-$id = $row['id'];
+  $db = get_db();
 
 
 
-
-
-// if login is succesful begin the session and head to the user profile
-
-if(password_verify($password, $passwordHashed)){
-
-  session_start();
-
-  $_SESSION["username"] = $username;
-
-  $_SESSION["id"] = $id;
+  $sql = 'SELECT password FROM members WHERE username=:username';
 
 
 
-  header("Location: user.php");
+  $statement = $db->prepare($sql);
 
+  $statement->bindValue(':username', $username);
+
+
+
+  $result = $statement->execute();
+
+
+
+  if ($result) {
+
+    $row = $statement->fetch();
+
+    $hashedPassword = $row['password'];
+
+
+
+    // now check to see if the hashed password matches
+
+    if (password_verify($password, $hashedPassword)) {
+
+      // password was correct, put the user on the session, and redirect to home
+
+      $_SESSION['username'] = $username;
+
+      header("Location: user.php");
+
+      die(); // we always include a die after redirects.
+
+    } else {
+
+      header("Location: ../../login.php");
+      die();
+      $badLogin = true;
+    }
+  } else {
+
+    $badLogin = true;
+  }
 }
-
-else { // else we return to the login screen
-
-  header("Location: ../../login.php");
-
-}
-
-
-
-?>
